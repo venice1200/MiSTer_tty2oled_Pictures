@@ -1,1 +1,1 @@
-atetrisc.gsc
+atetris.gsc
