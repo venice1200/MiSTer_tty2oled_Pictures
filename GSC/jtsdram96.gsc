@@ -1,0 +1,1 @@
+jtsdram48.gsc
