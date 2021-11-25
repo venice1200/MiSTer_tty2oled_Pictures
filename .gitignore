@@ -1,0 +1,2 @@
+# ignore generated data files
+data_*.json
