@@ -21,26 +21,36 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Generate data.js
+        env:
+          GIT_SHA: ${{ github.sha }}
         run: |
           import glob
           import json
           import os
-
+          from datetime import datetime
 
           PIC_ROOT = "Pictures/"
 
-          pics = {"gsc": {}, "xbm": {}}
-          for pic_type in pics.keys():
+          pics = {}
+          for pic_type in ["gsc", "xbm"]:
               for file in glob.glob(f"**/*.{pic_type}", recursive=True):
                   if os.path.islink(file):
-                      continue                
+                      continue
+
                   path, core = os.path.split(file.replace(PIC_ROOT, ""))
-                  if path not in pics[pic_type]:
-                      pics[pic_type][path] = []
-                  pics[pic_type][path].append(core)
+                  if path not in pics:
+                      pics[path] = []
+                  pics[path].append(core)
 
           with open("data_pics.json", "w") as outfile:
-              json.dump(pics, outfile)
+              data = {
+                  "pictures": pics,
+                  "version": {
+                      "date": datetime.now().isoformat(),
+                      "sha": os.environ.get("GIT_SHA", "unknown")[:7],
+                  },
+              }
+              json.dump(data, outfile)
         shell: python
 
       - name: Archive data JSON
