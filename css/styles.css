@@ -26,9 +26,11 @@
     border: none;
     text-align: left;
 }
-.nav .pure-menu-link:hover,
-.nav .pure-menu-link:focus {
+.nav .pure-menu-link.active {
     background: rgb(55, 60, 90);
+}
+.nav .pure-menu-link:hover {
+    background: rgb(72, 78, 114);
 }
 .nav .pure-menu-link {
     color: #fff;

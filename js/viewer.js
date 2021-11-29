@@ -25,8 +25,10 @@
 
   function putGscImageData (imageData, gscData) {
     const [r, g, b] = oledColors[currentColor]
+    // some GSC files were generated with extra data, grab just the last 8192 bytes
+    const data = gscData.length > 8192 ? gscData.slice(-8192) : gscData
     for (let i = 0; i < imageData.data.length; i += 8) {
-      const twoPixel = gscData[i / 8]
+      const twoPixel = data[i / 8]
       const high = (twoPixel & 0xF) + 1
       const low = (twoPixel >> 4) + 1
 
@@ -81,13 +83,26 @@
     })
   }
 
+  function setActiveMenuItem (parentId, matchingText) {
+    const parent = document.getElementById(parentId)
+    const children = parent.querySelectorAll('.pure-menu-link')
+    children.forEach((child) => {
+      const text = child.childNodes[0].wholeText ?? child.innerText
+      const classes = child.className?.split(' ').filter(item => item !== 'active')
+      if (text.toUpperCase() === matchingText.toUpperCase()) {
+        classes.push('active')
+      }
+      child.className = classes.join(' ')
+    })
+  }
+
   function setColor (newColor) {
     currentColor = newColor
+    setActiveMenuItem('oled-colors', newColor)
 
     // Redraw Grid
     const grid = document.getElementById('grid')
-    const children = grid.childNodes
-    children.forEach((item) => {
+    grid.querySelectorAll('canvas').forEach((item) => {
       const file = item.getAttribute('id')
       const path = item.getAttribute('path')
       drawPic(item, path, file)
@@ -102,6 +117,7 @@
   }
 
   function drawGrid (path, cores) {
+    setActiveMenuItem('pictures', path)
     const header = document.getElementById('pic-type')
     header.innerText = path
     // Clear and redraw the grid
@@ -134,6 +150,9 @@
       const a = document.createElement('a')
       a.href = '#'
       a.className = 'pure-menu-link'
+      if (currentColor === k) {
+        a.className += ' active'
+      }
       a.innerText = k.toUpperCase()
       const span = document.createElement('span')
       span.className = `oled-${k.toLowerCase()}`

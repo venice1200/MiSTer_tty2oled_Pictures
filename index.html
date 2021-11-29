@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>tty2oled pixviewer</title>
+    <title>tty2oled viewer</title>
     <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css"
         integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/grids-responsive-min.css" />
@@ -83,52 +83,6 @@
         </div>
     </div>
     <script src="js/viewer.js"></script>
-    <!-- Script to make the Menu link work -->
-    <!-- Just stripped down version of the js/ui.js script for the side-menu layout -->
-    <script>
-        function getElements() {
-            return {
-                menu: document.getElementById('sidebar'),
-            };
-        }
-
-        function toggleClass(element, className) {
-            var classes = element.className.split(/\s+/);
-            var length = classes.length;
-            var i = 0;
-
-            for (; i < length; i++) {
-                if (classes[i] === className) {
-                    classes.splice(i, 1);
-                    break;
-                }
-            }
-            // The className is not found
-            if (length === classes.length) {
-                classes.push(className);
-            }
-
-            element.className = classes.join(' ');
-        }
-
-        function toggleMenu() {
-            var active = 'active';
-            var elements = getElements();
-
-            toggleClass(elements.menu, active);
-        }
-
-        function handleEvent(e) {
-            var elements = getElements();
-            if (elements.menu.className.indexOf('active') !== -1) {
-                toggleMenu();
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            document.addEventListener('click', handleEvent);
-        });
-    </script>
 </body>
 
 </html>
