@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>tty2oled viewer</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css"
+        integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/grids-responsive-min.css" />
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div id="layout" class="pure-g">
+        <div id="sidebar" class="pure-u-1 pure-u-md-1-4">
+            <div class="header">
+                <img class="pure-img" src="img/tty2oled_viewer.png" alt="tty2oled viewer">
+            </div>
+            <div class="nav">
+                <div class="pure-menu">
+                    <span class="pure-menu-heading">Pictures</span>
+                    <ul id="pictures" class="pure-menu-list">
+                        <!-- pic list -->
+                    </ul>
+                    <span class="pure-menu-heading">OLED Colors</span>
+                    <ul id="oled-colors" class="pure-menu-list">
+                        <!-- oled color list -->
+                    </ul>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="pure-menu pure-menu-horizontal">
+                    <span class="pure-menu-heading">Version</span>
+                    <ul class="pure-menu-list">
+                        <li class="pure-menu-item">
+                            <span id="version-date"></span><br>
+                            <span id="version-sha"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pure-menu pure-menu-horizontal">
+                    <span class="pure-menu-heading">Forum</span>
+                    <ul class="pure-menu-list">
+                        <li class="pure-menu-item"><a href="https://misterfpga.org" class="pure-menu-link">MiSTer
+                                FPGA</a>
+                        </li>
+                        <li class="pure-menu-item"><a href="https://misterfpga.org/viewtopic.php?f=9&t=1887"
+                                class="pure-menu-link">tty2oled</a></li>
+                    </ul>
+                </div>
+                <div class="pure-menu pure-menu-horizontal">
+                    <span class="pure-menu-heading">GitHub</span>
+                    <ul class="pure-menu-list">
+                        <li class="pure-menu-item"><a href=" https://github.com/venice1200/MiSTer_tty2oled"
+                                class="pure-menu-link">Project</a></li>
+                        <li class="pure-menu-item"><a href="https://github.com/venice1200/MiSTer_tty2oled_Pictures"
+                                class="pure-menu-link">Pictures</a></li>
+                        <li class="pure-menu-item"><a href="https://github.com/venice1200/MiSTer_tty2oled/wiki"
+                                class="pure-menu-link">Wiki</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="main" class="pure-u-1 pure-u-md-3-4">
+            <section class="content">
+                <h1 class="content-subhead">PIXVIEWER</h1>
+                <header class="content-header">
+                    <h2 class="content-title" id="pic-type"></h2>
+                </header>
+                <div class="content-description" id="grid">
+                    <p>
+                        Preview all of the available tty2oled available pictures. The images are pulled directly
+                        from GitHub and rendered with HTML5 dynamically.
+                    </p>
+                    <p>
+                        Select the picture type in the side bar to display the available pictures. Change the OLED color
+                        with the color options.
+                    </p>
+
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="js/viewer.js"></script>
+</body>
+
+</html>
