@@ -99,6 +99,7 @@
 .footer {
     position: relative;
     bottom: 0;
+    margin-left: 0.5em;
     margin-top: 0.5em;
 }
 .footer .pure-menu {
@@ -128,7 +129,7 @@
         padding: 2em 3em 0;
         margin-left: 25%;
     }
-    
+
     #sidebar {
         position: fixed;
         top: 0;

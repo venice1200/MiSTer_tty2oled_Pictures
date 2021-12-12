@@ -23,14 +23,14 @@
     }
   }
   const oledColors = {
-    Green: [0, 255, 0],
     Blue: [0, 255, 255],
-    Yellow: [255, 255, 0],
-    White: [255, 255, 255]
+    Green: [0, 255, 0],
+    White: [255, 255, 255],
+    Yellow: [255, 255, 0]
   }
 
   // State
-  let currentColor = 'Green'
+  let currentColor = 'Blue'
 
   // Cores
   function fetchPic (fileType, path, core) {
@@ -177,9 +177,9 @@
       canvas.setAttribute('id', core)
       canvas.setAttribute('data-path', path)
       canvas.className = 'grid-item'
-      drawPic(canvas, path, core).then(() => {
-        grid.appendChild(canvas)
-      }).catch((e) => {
+      grid.appendChild(canvas)
+      drawPic(canvas, path, core).then().catch((e) => {
+        grid.removeChild(canvas)
         console.log(`could not draw ${core}`, e)
       })
     })
@@ -188,7 +188,6 @@
   function setVersion (kind, versionInfo) {
     const parent = document.getElementById(`${kind}-version`)
     const date = parent.querySelector('#version-date')
-    console.log(parent, date)
     try {
       date.innerHTML = new Date(versionInfo.date).toDateString()
     } catch (e) {
