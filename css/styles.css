@@ -26,7 +26,8 @@
     border: none;
     text-align: left;
 }
-.nav .pure-menu-link.active {
+.nav .pure-menu-selected>.pure-menu-link {
+    color: #fff;
     background: rgb(55, 60, 90);
 }
 .nav .pure-menu-link:hover {
@@ -35,6 +36,7 @@
 .nav .pure-menu-link {
     color: #fff;
     margin-left: 0.5em;
+    text-transform: uppercase;
 }
 .nav .pure-menu-heading {
     border-bottom: none;
@@ -46,7 +48,7 @@
 .header {
     text-align: center;
     top: auto;
-    margin: 1em auto;
+    margin: 5% 1.5em 0;
 }
 .header img {
     margin-bottom: 20px;
@@ -81,6 +83,7 @@
     font-size: 2em;
     color: #222;
     margin-bottom: 0.2em;
+    text-transform: uppercase;
 }
 .content-subhead {
     text-transform: uppercase;
@@ -96,8 +99,8 @@
 .footer {
     position: relative;
     bottom: 0;
-    height: 50px;
-    margin-top: 50px;
+    margin-left: 0.5em;
+    margin-top: 0.5em;
 }
 .footer .pure-menu {
     background: transparent;
@@ -108,10 +111,12 @@
 .footer .pure-menu-item,
 .footer .pure-menu-link {
     color: #ccc;
+    padding: 0.1em;
 }
 .footer .pure-menu-heading {
     border-bottom: none;
     color: rgb(48, 71, 95);
+    padding: 0.5em;
 }
 .footer .pure-menu a:hover,
 .footer .pure-menu a:focus {
@@ -125,19 +130,23 @@
         margin-left: 25%;
     }
 
-    .header {
-        margin: 80% 2em 0;
-    }
-
     #sidebar {
         position: fixed;
         top: 0;
         bottom: 0;
+        overflow: auto;
     }
 
     .footer {
         text-align: center;
     }
+}
+
+/* Version Info */
+.version {
+    color: rgb(48, 71, 95);
+    font-size: 75%;
+    margin-left: 2em;
 }
 
 /* Picture Count */
