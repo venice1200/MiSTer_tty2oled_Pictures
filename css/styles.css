@@ -184,4 +184,10 @@
     border: 2px solid rgb(61, 79, 93);
     background-color: black;
     margin-right: 4px;
+    transition: transform .5s ease .2s;
+}
+
+.grid-item:hover {
+    image-rendering: pixelated;
+    transform: scale(1.5);
 }
