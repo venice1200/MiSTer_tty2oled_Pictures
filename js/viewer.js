@@ -1,3 +1,7 @@
+/*
+ * MiSTer i2c2oled and tty2oled viewer
+ * Copyright (c) 2021 / 2022 mr-fitzie
+ */
 (function (window, document) {
   const baseUrl = 'https://raw.githubusercontent.com/venice1200'
   const hexPattern = /0x[0-9A-F]{2}/gi
@@ -23,14 +27,39 @@
     }
   }
   const oledColors = {
-    Blue: [0, 255, 255],
-    Green: [0, 255, 0],
-    White: [255, 255, 255],
-    Yellow: [255, 255, 0]
+    Blue: {
+      name: 'Blue',
+      rgb: [0, 255, 255],
+      dualColor: false
+    },
+    Green: {
+      name: 'Green',
+      rgb: [0, 255, 0],
+      dualColor: false,
+    },
+    White: {
+      name: 'White',
+      rgb: [255, 255, 255],
+      dualColor: false,
+    },
+    Yellow: {
+      name: 'Yellow',
+      rgb: [255, 255, 0],
+      dualColor: false,
+    },
+    BlueYellow: {
+      name: 'Blue & Yellow',
+      rgb: [255, 255, 0, 0, 255, 255], // Yellow then Blue
+      dualColor: true,
+    }
   }
 
   // State
-  let currentColor = 'Blue'
+  let current = {
+    uniColor: 'Blue',
+    dualColor: 'BlueYellow',
+    useDualColor: false,
+  }
 
   // Cores
   function fetchPic (fileType, path, core) {
@@ -43,7 +72,7 @@
   }
 
   function putGscImageData (imageData, gscData) {
-    const [r, g, b] = oledColors[currentColor]
+    const [r, g, b] = oledColors[current.uniColor].rgb
     // some GSC files were generated with extra data, grab just the last 8192 bytes
     const data = gscData.length > 8192 ? gscData.slice(-8192) : gscData
     for (let i = 0; i < imageData.data.length; i += 8) {
@@ -75,10 +104,16 @@
         data.push(parseInt(pixel))
       }
     })
+    const currentColor = oledColors[current.dualColor]
+    let [r, g, b] = currentColor.rgb
     for (let i = 0; i < imageData.data.length; i += 4) {
-      const pixel = data[i / 4]
-      // first 16 rows (128x16x4) are yellow, rest is blue
-      const [r, g, b] = i < 8192 ? oledColors.Yellow : oledColors.Blue
+      let pixel = data[i / 4]
+      if (currentColor.dualColor) {
+        // first 16 rows (128x16x4) are yellow, rest is blue
+        [r, g, b] = i < 8192 ? currentColor.rgb : currentColor.rgb.slice(3)
+      } else {
+        pixel = i < 8192 ? 1 - pixel : pixel
+      }
       if (pixel === 1) {
         imageData.data[i + 0] = r
         imageData.data[i + 1] = g
@@ -89,7 +124,7 @@
   }
 
   function putXbmImageData (imageData, xbmData) {
-    const [r, g, b] = oledColors[currentColor]
+    const [r, g, b] = oledColors[current.uniColor].rgb
     const data = []
     xbmData.forEach(eightPixel => {
       for (let j = 0; j < 8; j++) {
@@ -136,9 +171,18 @@
     })
   }
 
-  function setColor (newColor) {
-    currentColor = newColor
-    const comparator = node => node.innerText.toUpperCase() === newColor.toUpperCase()
+  function setColor (id, newColor) {
+    if (document.getElementById(id).className.includes('disabled')) {
+      return
+    }
+
+    if (current.useDualColor) {
+      current.dualColor = newColor
+    } else {
+      current.uniColor = newColor
+    }
+
+    const comparator = node => node.getAttribute('data-color') === newColor
     setMenuClass('oled-colors', comparator)
 
     // Redraw Grid
@@ -157,15 +201,20 @@
     }
   }
 
-  function drawGrid (kind, path, cores, fixedColor = false) {
+  function drawGrid (kind, path, cores, dualColor = false) {
+    // enable searching
+    unhideSearch()
+
+    current.useDualColor = dualColor
     // set the selected menu item
     const comparator = node => {
       const text = node.innerText.match(/(.*)(?:\s+\([\d]+\))/m)[1]
       return text.toUpperCase() === path.toUpperCase()
     }
     setMenuClass('pictures', comparator)
-    // enable/disable oled color selection
-    setMenuClass('oled-colors', () => fixedColor, '.pure-menu-item', 'pure-menu-disabled')
+    // enable or disable and select proper color selection
+    setMenuClass('oled-colors', node => node.getAttribute('data-color') === (current.useDualColor ? current.dualColor : current.uniColor))
+    setMenuClass('oled-colors', node => !dualColor && (node.getAttribute('data-dualcolor') === 'true'), '.pure-menu-item', 'pure-menu-disabled')
     document.getElementById('pic-type').innerText = `${kind}2oled Pictures`
     document.getElementById('pic-path').innerText = path
     // Clear and redraw the grid
@@ -198,7 +247,7 @@
     sha.innerText = versionInfo.sha
   }
 
-  function pictureMenuItem (parent, kind, path, cores, fixedColor) {
+  function pictureMenuItem (parent, kind, path, cores, dualColor) {
     const sortedCores = cores.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
     const li = document.createElement('li')
     li.className = 'pure-menu-item'
@@ -211,27 +260,27 @@
     span.innerText = ` (${cores.length})`
     a.append(span)
     li.append(a)
-    a.onclick = () => drawGrid(kind, path, sortedCores, fixedColor)
+    a.onclick = () => drawGrid(kind, path, sortedCores, dualColor)
     parent.append(li)
   }
 
   function populateColorsMenu () {
     const colorButtons = document.getElementById('oled-colors')
-    for (const k of Object.keys(oledColors)) {
+    for (const [k, v] of Object.entries(oledColors)) {
       const li = document.createElement('li')
-      li.className = 'pure-menu-item'
-      if (currentColor === k) {
-        li.className += ' pure-menu-selected'
-      }
+      li.id = `color-${k}`
+      li.setAttribute('data-color', k)
+      li.setAttribute('data-dualcolor', v.dualColor)
+      li.className = 'pure-menu-item  pure-menu-disabled'
       const a = document.createElement('a')
       a.href = '#'
       a.className = 'pure-menu-link'
-      a.innerText = k
+      a.innerText = v.name
       const span = document.createElement('span')
       span.className = `oled-${k.toLowerCase()}`
       a.prepend(span)
       li.append(a)
-      a.onclick = () => setColor(k)
+      li.onclick = () => setColor(li.id, k)
       colorButtons.append(li)
     }
   }
@@ -241,22 +290,51 @@
       ['tty', 'data_pics.json', false],
       ['i2c', 'https://venice1200.github.io/MiSTer_i2c2oled_Pictures/data_i2c_pix.json', true]
     ]
-    picData.forEach(([kind, url, fixedColor]) => {
+    picData.forEach(([kind, url, dualColor]) => {
       const menuParent = document.getElementById(`${kind}-pictures`)
       fetch(url).then((response) => {
         response.json().then(data => {
           setVersion(kind, data.version)
           for (const [path, cores] of Object.entries(data.pictures).sort()) {
-            pictureMenuItem(menuParent, kind, path, cores, fixedColor)
+            pictureMenuItem(menuParent, kind, path, cores, dualColor)
           }
         })
       })
     })
   }
 
+  // Search
+  function debounce (func, timeout = 300) {
+    let timer
+    return (...args) => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {func.apply(this, args)}, timeout)
+    }
+  }
+
+  function search (query) {
+    const gridItems = document.querySelectorAll('.grid-item')
+    gridItems.forEach(item => {
+      if (item.title.toLowerCase().includes(query)) {
+        item.classList.remove('hidden')
+      } else {
+        item.classList.add('hidden')
+      }
+    })
+  }
+
+  function unhideSearch () {
+    const searchForm = document.getElementById('search-form')
+    searchForm.classList.remove('hidden')
+  }
+
   function init () {
     populateColorsMenu()
     populatePictureMenu()
+
+    // bind search
+    const searchbox = document.getElementById('searchbox')
+    searchbox.onkeyup = debounce(() => search(searchbox.value))
   }
 
   init()

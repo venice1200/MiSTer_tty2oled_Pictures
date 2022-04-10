@@ -30,7 +30,7 @@
     color: #fff;
     background: rgb(55, 60, 90);
 }
-.nav .pure-menu-link:hover {
+.nav .pure-menu-item:not(.pure-menu-disabled)>.pure-menu-link:hover {
     background: rgb(72, 78, 114);
 }
 .nav .pure-menu-link {
@@ -52,17 +52,6 @@
 }
 .header img {
     margin-bottom: 20px;
-}
-.header-title,
-.header-subhead {
-    margin: 0;
-}
-.header-title {
-    text-transform: uppercase;
-}
-.header-subhead {
-    font-weight: 300;
-    color: rgb(176, 202, 219);
 }
 
 /* Content */
@@ -142,6 +131,13 @@
     }
 }
 
+/* Search Form */
+.search-form {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 768px;
+}
+
 /* Version Info */
 .version {
     color: rgb(48, 71, 95);
@@ -156,6 +152,7 @@
 
 /* OLED */
 .oled-blue,
+.oled-blueyellow,
 .oled-green,
 .oled-yellow,
 .oled-white {
@@ -167,6 +164,10 @@
 }
 .oled-blue {
     background: #41ccb4;
+}
+.oled-blueyellow {
+    border-top: 7px solid #ffc94c;
+    border-bottom: 8px solid #41ccb4;
 }
 .oled-green {
     background: #40c365;
