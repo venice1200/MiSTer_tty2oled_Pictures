@@ -89,12 +89,19 @@
                 </div>
                 <header class="content-header">
                     <h1 class="content-subhead" id="pic-type">Instructions</h1>
-                    <form id="search-form" class="pure-form pure-form-aligned search-form hidden">
-                        <div class="pure-control-group">
-                            <label for="searchbox">Search</label>
-                            <input type="search" id="searchbox" placeholder="Search for a core or setname…"
-                                class="pure-input-2-3 pure-input-rounded" />
-                        </div>
+                    <form id="options-form" class="pure-form pure-form-aligned options-form hidden">
+                        <fieldset>
+                            <div id="op-search" class="pure-control-group">
+                                <label for="searchbox">Search</label>
+                                <input type="search" id="searchbox" placeholder="Search for a core or setname…"
+                                    class="pure-input-2-3 pure-input-rounded" />
+                            </div>
+                            <div id="op-invertheader" class="pure-controls">
+                                <label for="invertheader" class="pure-checkbox">
+                                    <input type="checkbox" id="invertheader" /> Invert Header
+                                </label>
+                            </div>
+                        </fieldset>
                     </form>
                     <h2 class="content-title" id="pic-path"></h2>
                 </header>

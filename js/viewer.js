@@ -59,6 +59,7 @@
     uniColor: 'Blue',
     dualColor: 'BlueYellow',
     useDualColor: false,
+    invertHeader: false,
   }
 
   // Cores
@@ -111,7 +112,7 @@
       if (currentColor.dualColor) {
         // first 16 rows (128x16x4) are yellow, rest is blue
         [r, g, b] = i < 8192 ? currentColor.rgb : currentColor.rgb.slice(3)
-      } else {
+      } else if (current.invertHeader) {
         pixel = i < 8192 ? 1 - pixel : pixel
       }
       if (pixel === 1) {
@@ -171,6 +172,12 @@
     })
   }
 
+  function setInvertHeader () {
+    const invertHeader = document.getElementById('invertheader')
+    oledColors[current.dualColor].dualColor ? invertHeader.setAttribute('disabled', '') : invertHeader.removeAttribute('disabled')
+    current.invertHeader = invertHeader.checked
+  }
+
   function setColor (id, newColor) {
     if (document.getElementById(id).className.includes('disabled')) {
       return
@@ -185,6 +192,11 @@
     const comparator = node => node.getAttribute('data-color') === newColor
     setMenuClass('oled-colors', comparator)
 
+    setInvertHeader()
+    redrawGrid()
+  }
+
+  function redrawGrid () {
     // Redraw Grid
     const grid = document.getElementById('grid')
     grid.querySelectorAll('canvas').forEach((item) => {
@@ -202,8 +214,8 @@
   }
 
   function drawGrid (kind, path, cores, dualColor = false) {
-    // enable searching
-    unhideSearch()
+    // enable searching and other options
+    unhideOptionsForm(kind)
 
     current.useDualColor = dualColor
     // set the selected menu item
@@ -323,18 +335,28 @@
     })
   }
 
-  function unhideSearch () {
-    const searchForm = document.getElementById('search-form')
+  function unhideOptionsForm (kind) {
+    const searchForm = document.getElementById('options-form')
     searchForm.classList.remove('hidden')
+
+    const invertHeader = document.getElementById('op-invertheader')
+    kind === 'i2c' ? invertHeader.classList.remove('hidden') : invertHeader.classList.add('hidden')
   }
 
   function init () {
     populateColorsMenu()
     populatePictureMenu()
+    setInvertHeader()
 
     // bind search
     const searchbox = document.getElementById('searchbox')
-    searchbox.onkeyup = debounce(() => search(searchbox.value))
+    searchbox.addEventListener('input', debounce(() => search(searchbox.value)))
+    // bind invertheader
+    const invertHeader = document.getElementById('invertheader')
+    invertHeader.onchange = (e) => {
+      current.invertHeader = e.target.checked
+      redrawGrid()
+    }
   }
 
   init()
