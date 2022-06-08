@@ -9,3 +9,6 @@ on a (OLED) Display driven by an Arduino which is connected via USB to the MiSTe
 Use mr-fitzie's **PixViewer** https://venice1200.github.io/MiSTer_tty2oled_Pictures/ for a preview.
   
 ![Case with OLED](https://github.com/venice1200/MiSTer_tty2oled/blob/main/Pictures/tty2oled_video.gif?raw=true)  
+---  
+[![Publish GitHub Pages](https://github.com/venice1200/MiSTer_tty2oled_Pictures/actions/workflows/publish_github_pages.yml/badge.svg)](https://github.com/venice1200/MiSTer_tty2oled_Pictures/actions/workflows/publish_github_pages.yml) [![pages-build-deployment](https://github.com/venice1200/MiSTer_tty2oled_Pictures/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/venice1200/MiSTer_tty2oled_Pictures/actions/workflows/pages/pages-build-deployment)
+ 
